@@ -1,0 +1,60 @@
+pyramids_tourist_app/
+├─ android/
+├─ ios/
+├─ web/
+├─ assets/
+│  └─ egypt_bg.png
+├─ pubspec.yaml
+└─ lib/
+   ├─ main.dart
+   ├─ app/
+   │  ├─ app.dart
+   │  └─ router.dart                # (اختياري لاحقًا لو حبيت GoRouter)
+   ├─ core/
+   │  ├─ constants/
+   │  │  └─ colors.dart            # kGold / kDark
+   │  └─ theme/
+   │     └─ app_theme.dart         # ThemeData (Dark + Gold)
+   ├─ data/
+   │  ├─ api/
+   │  │  └─ api_client.dart        # الاتصال بالـ backend + حفظ التوكن
+   │  ├─ models/
+   │  │  ├─ user.dart
+   │  │  └─ poi.dart
+   │  └─ repositories/
+   │     ├─ auth_repository.dart
+   │     ├─ poi_repository.dart
+   │     └─ itinerary_repository.dart
+   ├─ features/
+   │  ├─ splash/
+   │  │  └─ presentation/
+   │  │     └─ splash_page.dart
+   │  ├─ auth/
+   │  │  ├─ state/
+   │  │  │  └─ auth_controller.dart
+   │  │  └─ presentation/
+   │  │     └─ auth_page.dart
+   │  ├─ shell/
+   │  │  └─ presentation/
+   │  │     └─ app_shell.dart      # BottomNav + الصفحات
+   │  ├─ explore/
+   │  │  └─ presentation/
+   │  │     └─ explore_page.dart
+   │  ├─ plan/
+   │  │  └─ presentation/
+   │  │     └─ plan_page.dart
+   │  ├─ itineraries/
+   │  │  └─ presentation/
+   │  │     └─ itineraries_page.dart
+   │  └─ favorites/
+   │     └─ presentation/
+   │        └─ favorites_page.dart
+   │  └─ profile/
+   │     └─ presentation/
+   │        └─ profile_page.dart
+   └─ shared/
+      ├─ widgets/
+      │  ├─ atoms.dart             # GoldButton / InfoChip / OutlinedPill / SectionHeader
+      │  └─ background.dart        # GoldenScaffold (الخلفية الموحدة)
+      └─ demo/
+         └─ demo_data.dart         # بيانات ديمو للأماكن
