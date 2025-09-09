@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/colors.dart';
 
 class GoldenScaffold extends StatelessWidget {
   const GoldenScaffold({
@@ -8,40 +7,70 @@ class GoldenScaffold extends StatelessWidget {
     this.appBar,
     this.bottomNavigationBar,
     this.fab,
+    this.backgroundAsset,
+    this.imageOpacity,
+    this.extendBodyBehindAppBar = true,
+    this.showOverlayGradient = true,
   });
+
   final PreferredSizeWidget? appBar;
   final Widget body;
   final Widget? bottomNavigationBar;
   final Widget? fab;
 
+  final String? backgroundAsset;
+  final double? imageOpacity;
+  final bool extendBodyBehindAppBar;
+  final bool showOverlayGradient;
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
+    final scaffoldBg = theme.scaffoldBackgroundColor;
+
+    final bgOpacity = imageOpacity ?? (isDark ? 0.12 : 0.06);
+
+    final topGrad = scheme.surface.withOpacity(isDark ? .40 : .20);
+    final bottomGrad = scheme.surface.withOpacity(isDark ? .78 : .42);
+
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      extendBody: true,
+      extendBodyBehindAppBar: extendBodyBehindAppBar,
       appBar: appBar,
       body: Stack(
         children: [
           Positioned.fill(
             child: DecoratedBox(
-              decoration: const BoxDecoration(
-                color: kDark,
+              decoration: BoxDecoration(
+                color: scaffoldBg,
                 image: DecorationImage(
-                  image: AssetImage('assets/egypt_bg.png'),
+                  image: AssetImage(
+                    backgroundAsset ?? 'assets/images/egypt_bg.jpg',
+                  ),
                   fit: BoxFit.cover,
-                  opacity: 0.12,
+                  opacity: bgOpacity,
                 ),
               ),
-              child: Container(
-                decoration: const BoxDecoration(
+              child: showOverlayGradient
+                  ? DecoratedBox(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    begin: Alignment.topCenter, end: Alignment.bottomCenter,
-                    colors: [Color(0x661F1F1F), Color(0xB31F1F1F)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [topGrad, bottomGrad],
                   ),
                 ),
-              ),
+              )
+                  : const SizedBox.shrink(),
             ),
           ),
-          Positioned.fill(child: SafeArea(child: body)),
+
+          Positioned.fill(
+            child: SafeArea(child: body),
+          ),
         ],
       ),
       floatingActionButton: fab,

@@ -1,16 +1,35 @@
-// user.dart
-class User {
-  final String id;
-  final String name;
+class AppUser {
+  final int id;
   final String email;
-  final String? avatar;
+  final String name;
+  final String? createdAt;
+  final bool emailVerified;
 
-  User({required this.id, required this.name, required this.email, this.avatar});
+  AppUser({
+    required this.id,
+    required this.email,
+    required this.name,
+    this.createdAt,
+    this.emailVerified = false,
+  });
 
-  factory User.fromJson(Map<String, dynamic> j) => User(
-    id: (j['id'] ?? j['_id'] ?? '').toString(),
-    name: (j['name'] ?? '').toString(),
-    email: (j['email'] ?? '').toString(),
-    avatar: (j['avatar'] as String?)?.toString(),
-  );
+  factory AppUser.fromJson(Map<String, dynamic> j) {
+    return AppUser(
+      id: (j['id'] as num).toInt(),
+      email: j['email'] as String,
+      name: j['name'] as String,
+      createdAt: j['createdAt'] as String?,
+      emailVerified: (j['emailVerified'] == 1) || (j['emailVerified'] == true),
+    );
+  }
+
+  AppUser copyWith({String? name, String? email, bool? emailVerified}) {
+    return AppUser(
+      id: id,
+      email: email ?? this.email,
+      name: name ?? this.name,
+      createdAt: createdAt,
+      emailVerified: emailVerified ?? this.emailVerified,
+    );
+  }
 }

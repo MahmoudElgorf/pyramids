@@ -1,28 +1,46 @@
-import '../api/api_client.dart';
-import '../models/user.dart';
+import 'package:pyramids/data/api/api_client.dart';
+import 'package:pyramids/data/models/user.dart';
 
 class AuthRepository {
-  final _api = ApiClient.I;
+  final ApiClient api;
+  AuthRepository(this.api);
 
-  Future<User> login(String email, String password) async {
-    final data = await _api.login(email: email, password: password);
-    if (data['user'] is Map<String, dynamic>) {
-      return User.fromJson(data['user']);
-    }
-    final me = await _api.me();
-    return User.fromJson(me);
+  // ------- Auth -------
+  Future<AppUser> login(String email, String password) async {
+    final data = await api.login(email: email, password: password);
+    final user = (data['user'] as Map<String, dynamic>?) ?? await api.me();
+    return AppUser.fromJson(user as Map<String, dynamic>);
   }
 
-  Future<User> register(String name, String email, String password) async {
-    final data = await _api.register(name: name, email: email, password: password);
-    if (data['user'] is Map<String, dynamic>) {
-      return User.fromJson(data['user']);
-    }
-    final me = await _api.me();
-    return User.fromJson(me);
+  Future<AppUser> register(String name, String email, String password) async {
+    final data = await api.register(email: email, name: name, password: password);
+    final user = (data['user'] as Map<String, dynamic>?) ?? await api.me();
+    return AppUser.fromJson(user as Map<String, dynamic>);
   }
 
-  Future<User> me() async => User.fromJson(await _api.me());
+  Future<AppUser> me() async => AppUser.fromJson(await api.me());
+  Future<void> logout() => api.serverLogout();
 
-  Future<void> logout() => _api.logout();
+  // ------- Profile -------
+  Future<AppUser> updateName(String name) async {
+    final data = await api.updateMe(name: name);
+    if (data['id'] == null) return AppUser.fromJson(await api.me());
+    return AppUser.fromJson(data);
+  }
+
+  // ------- Password (change in-session) -------
+  Future<void> changePassword({
+    required String current,
+    required String next,
+  }) => api.changePassword(currentPassword: current, newPassword: next);
+
+  // ------- Password Reset (email/token flow) -------
+  Future<void> requestPasswordReset({required String email}) =>
+      api.requestPasswordReset(email: email);              // /password/forgot
+
+  Future<void> confirmPasswordReset({
+    required String token,
+    required String newPassword,
+  }) =>
+      api.confirmPasswordReset(token: token, newPassword: newPassword); // /password/reset
 }

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../core/theme/app_theme.dart';
-import '../features/splash/presentation/splash_page.dart';
-import '../features/auth/state/auth_controller.dart';
-import '../data/repositories/auth_repository.dart';
+
+import 'package:pyramids/core/theme/app_theme.dart';
+import 'package:pyramids/core/theme/theme_controller.dart';
+
+import 'package:pyramids/data/api/api_client.dart';
+import 'package:pyramids/data/repositories/auth_repository.dart';
+
+import 'package:pyramids/features/auth/state/auth_controller.dart';
+import 'package:pyramids/features/auth/presentation/auth_page.dart';
 
 class PyramidsTouristApp extends StatelessWidget {
   const PyramidsTouristApp({super.key});
@@ -12,12 +17,20 @@ class PyramidsTouristApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthController(AuthRepository())),
+        ChangeNotifierProvider(
+          create: (_) => AuthController(AuthRepository(ApiClient.I))..loadMe(),
+        ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: buildAppTheme(),
-        home: const SplashPage(),
+      child: Consumer<ThemeController>(
+        builder: (context, theme, _) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: buildLightTheme(),
+            darkTheme: buildDarkTheme(),
+            themeMode: theme.mode,
+            home: const AuthPage(),
+          );
+        },
       ),
     );
   }

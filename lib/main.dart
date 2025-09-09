@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'app/app.dart';
+import 'core/theme/theme_controller.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const PyramidsTouristApp());
+  final themeController = await ThemeController.init();
+  runApp(
+    ChangeNotifierProvider.value(
+      value: themeController,
+      child: const PyramidsTouristApp(),
+    ),
+  );
 }
