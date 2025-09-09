@@ -20,7 +20,6 @@ class ApiException implements Exception {
   String toString() => 'ApiException($status): $message';
 }
 
-/// خطأ اعتماد (ايميل/باسورد غلط)
 class AuthInvalidCredentials extends ApiException {
   const AuthInvalidCredentials(String message, {int? status})
       : super(message, status: status);
